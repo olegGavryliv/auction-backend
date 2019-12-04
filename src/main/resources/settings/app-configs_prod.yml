@@ -1,0 +1,14 @@
+
+app:
+  name: auction
+  environment: production
+  limitation-settings:
+    - max-allowed-products: 100
+      bad-words-check: AVERAGE
+      reserved-product-names: kill, aschole
+    - max-allowed-products: 100
+      bad-words-check: DEFAULT
+      reserved-product-names:
+  auction-settings:
+    averageAuctionDuration: PT48H
+    categories: sport, cinema
