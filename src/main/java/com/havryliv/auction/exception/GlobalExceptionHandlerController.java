@@ -2,6 +2,7 @@ package com.havryliv.auction.exception;
 
 import com.havryliv.auction.constants.ExceptionMessages;
 import com.havryliv.auction.dto.ValidationErrorDTO;
+import io.lettuce.core.RedisCommandTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

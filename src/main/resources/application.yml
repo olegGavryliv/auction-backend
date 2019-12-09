@@ -1,26 +1,37 @@
+message: Hello from config
+
 logging:
   level:
     org:
       springframework: warn
+
 server:
+  port: 8080
   servlet:
     contextPath: /auction
+
+hibernate:
+ id:
+   new_generator_mappings: true
+
 spring:
+
+  flyway:
+    enabled: false  # disable automatic migration
+
   datasource:
-    driverClassName: org.h2.Driver
-    password: password
-    url: jdbc:h2:./data/auction
-    username: sa
-  h2:
-    console:
-      enabled: true
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/auction
+    username: postgres
+    password: $$$$$$$$$$$$$
+
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database: POSTGRESQL
     hibernate:
       ddl-auto: validate
     show-sql: true
-  liquibase:
-    change-log: classpath:db/changelog-master.xml
+    generate-ddl: true
+
   mail:
     host: smtp.gmail.com
     password: $$$$$$$$$$$$$
@@ -37,11 +48,14 @@ spring:
           writetimeout: 5000
     username: kurm6886@gmail.com
 
-  cache:
-    type: redis
-  redis:
-    host: localhost
-    port: 6379
+redis:
+  hostname: localhost
+  port: 6379
+  ttl: 10
+  timeout: 2
+  socketTimeout: 2
+
+
 
 
 

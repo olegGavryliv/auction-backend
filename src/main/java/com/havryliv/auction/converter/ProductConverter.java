@@ -4,17 +4,10 @@ import com.havryliv.auction.dto.ProductDTO;
 import com.havryliv.auction.entity.Product;
 import com.havryliv.auction.entity.Review;
 import lombok.experimental.UtilityClass;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 
@@ -44,13 +37,12 @@ public class ProductConverter {
                 .description(product.getDescription())
                 .expireTime(product.getExpireTime())
                 .name(product.getName())
-                .rating( reviews != null ? reviews.stream().mapToDouble(Review::getRating).average().orElse(0) : 0)
+                .rating(reviews != null ? reviews.stream().mapToDouble(Review::getRating).average().orElse(0) : 0)
                 .reviews(product.getReviews() != null ? product.getReviews()
                         .stream()
                         .map(ReviewConverter::fromEntityToDTO)
                         .collect(Collectors.toList()) : Collections.emptyList())
                 .build();
-
 
     }
 }

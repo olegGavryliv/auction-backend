@@ -1,23 +1,27 @@
 package com.havryliv.auction.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+@EqualsAndHashCode(of = {"id", "time"}, callSuper = false)
 @Builder
 @Entity
-public class Review {
+public class Review extends BaseEntityAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "review_generator", strategy = GenerationType.AUTO )
+    @SequenceGenerator(
+            name = "review_generator",
+            sequenceName = "review_sequence",
+            allocationSize=1
+    )
+    @Column(nullable = false)
+    protected Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
@@ -32,6 +36,5 @@ public class Review {
     private Double rating;
 
     private String comment;
-
 
 }

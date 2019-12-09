@@ -15,6 +15,6 @@ public class InvalidJwtAuthenticationException extends AuthenticationException {
         this.httpStatus = httpStatus;
     }
 
-    private static final long serialVersionUID = -761503632186596342L;
+    private static final long serialVersionUID = 1L;
 
 }

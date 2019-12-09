@@ -21,11 +21,12 @@ public class ReviewConverter {
     }
 
     public Review fromDTOToEntity(ReviewDTO reviewDTO){
-        return Review.builder()
-                .id(reviewDTO.getId())
+        Review review = Review.builder()
                 .time(LocalDateTime.now())
                 .rating(reviewDTO.getRating())
                 .comment(reviewDTO.getComment())
                 .build();
+        review.setId(reviewDTO.getId());
+        return review;
     }
 }

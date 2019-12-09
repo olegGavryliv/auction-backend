@@ -1,9 +1,6 @@
 package com.havryliv.auction.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +15,21 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(of = {"id", "username"}, callSuper = false)
 @Builder
 @Entity
-public class User implements UserDetails {
+@Table(name = "users")
+public class User extends BaseEntityAudit implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "users_generator",  strategy = GenerationType.AUTO )
+    @SequenceGenerator(
+            name = "users_generator",
+            sequenceName = "users_sequence",
+            allocationSize=1
+    )
+    @Column(nullable = false)
+    protected Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -32,7 +37,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)

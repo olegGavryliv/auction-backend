@@ -15,7 +15,10 @@ import com.havryliv.auction.repository.BidRepository;
 import com.havryliv.auction.repository.ProductRepository;
 import com.havryliv.auction.repository.UserRepository;
 import com.havryliv.auction.service.ProductService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -43,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
         this.bidRepository = bidRepository;
     }
 
+    @Caching(evict = {@CacheEvict(value = "AllProducts", allEntries = true)})
     @Override
     public ProductDTO addProduct(ProductDTO productDTO, String ownerName) {
         Product product = buildProductForSave(productDTO, ownerName);
@@ -74,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
         return BidConverter.fromEntityToDTO(dbBid);
     }
 
+    @Cacheable(value = "AllProducts")
     @Override
     public PageableProductDTO getAll() {
         Page<Product> allProducts = productRepository.findAll(PageRequest.of(0, 20));
@@ -94,16 +99,13 @@ public class ProductServiceImpl implements ProductService {
        return ProductConverter.fromEntityToDTO(dbProduct);
     }
 
-    @Cacheable(value = "products")
+    @Cacheable(value = "Top3Products")
     @Override
     public List<String> get3RandomImages() {
-       return productRepository.findAll()
-               .stream()
-               .limit(3)
+       return productRepository.findTop3ByRatingGreaterThanOrderByRatingAsc(2.0).stream()
                .map(Product::getImage)
                .collect(Collectors.toList());
     }
-
 
     private Product buildProductForSave(ProductDTO productDTO, String ownerName) {
         Product product = ProductConverter.fromDTOtoEntity(productDTO);

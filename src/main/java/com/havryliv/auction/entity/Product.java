@@ -1,9 +1,6 @@
 package com.havryliv.auction.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,13 +11,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(of = {"id", "name"}, callSuper = false)
 @Builder
 @Entity
-public class Product {
+public class Product extends BaseEntityAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "product_generator",  strategy = GenerationType.AUTO )
+    @SequenceGenerator(
+            name = "product_generator",
+            sequenceName = "product_sequence",
+            allocationSize=1
+    )
+    @Column(nullable = false)
+    protected Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -31,7 +35,7 @@ public class Product {
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "USER_ID")
     private User user;
 
     private LocalDate expireTime;

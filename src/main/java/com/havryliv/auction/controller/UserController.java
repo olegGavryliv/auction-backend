@@ -6,6 +6,7 @@ import com.havryliv.auction.dto.UserDTO;
 import com.havryliv.auction.service.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/users")
 @Api(tags = "users")
+@RefreshScope
 public class UserController {
 
     private UserService userService;
@@ -26,6 +28,9 @@ public class UserController {
 
     @Value("${app.environment}")
     private String environment;
+
+    @Value("${message:Hello default}")
+    private String message;
 
     public UserController(UserService userService, AppConfig appConfig) {
         this.userService = userService;
@@ -42,6 +47,7 @@ public class UserController {
         System.out.println(appConfig);
         System.out.println(environment);
         System.out.println(appConfig.getAuctionSettings());
+        System.out.println(message);
         return ResponseEntity.ok()
                 .body(userService.login(userDTO.getUsername(), userDTO.getPassword()));
     }
