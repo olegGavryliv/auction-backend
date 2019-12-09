@@ -14,6 +14,7 @@ import com.havryliv.auction.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review dbReview = reviewRepository.save(review);
 
+        updateProductRating(dbProduct);
+
         return ReviewConverter.fromEntityToDTO(dbReview);
     }
+
+    private void updateProductRating(Product dbProduct) {
+        dbProduct.setRating(reviewRepository.getAverageRatingByProductId(dbProduct.getId()));
+        productRepository.save(dbProduct);
+    }
+
+
 }

@@ -31,10 +31,9 @@ public class MailServiceImpl implements MailService {
         try {
             ((JavaMailSenderImpl) javaMailSender).testConnection();
         } catch (MessagingException e) {
-          //  throw new BusinessException(ExceptionMessages.FAIL_CONNECT_TO_EMAIL_SERVICE, HttpStatus.NOT_FOUND);
+            log.error(ExceptionMessages.FAIL_CONNECT_TO_EMAIL_SERVICE);
         }
     }
-
 
     @Override
     @Async
@@ -42,10 +41,8 @@ public class MailServiceImpl implements MailService {
     try {
         SimpleMailMessage msg = buildMessage(content, mailBody, emailTo);
         javaMailSender.send(msg);
-
     }catch (MailException e ){
-        throw new BusinessException(ExceptionMessages.EMAIL_NOT_SENT, new String[]{emailTo},  HttpStatus.NOT_FOUND);
-    }
+        throw new BusinessException(ExceptionMessages.EMAIL_NOT_SENT, new String[]{emailTo},  HttpStatus.NOT_FOUND); }
     }
 
     private SimpleMailMessage buildMessage(String content, String mailBody, String emailTo) {

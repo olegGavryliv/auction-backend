@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,6 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT p FROM Product p LEFT JOIN FETCH p.reviews where p.id = :id")
     Optional<Product> findByIdCustom(@Param("id") Long id);
 
-
     Page<Product> findAll(Pageable pageable);
+
+    List<Product> findTop3ByRatingGreaterThanOrderByRatingAsc(Double topRating);
 }
