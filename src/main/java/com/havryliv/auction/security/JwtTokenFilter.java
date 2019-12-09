@@ -1,13 +1,7 @@
 package com.havryliv.auction.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.havryliv.auction.exception.BusinessException;
-import com.havryliv.auction.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,14 +12,11 @@ import java.io.IOException;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-
     private JwtTokenProvider jwtTokenProvider;
 
-    private UserService userService;
 
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
     }
 
     @Override
@@ -33,17 +24,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
 
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                UserDetails userDetails = userService.loadUserByUsername(jwtTokenProvider.getUsername(token));
-                Authentication auth = jwtTokenProvider.getAuthentication(userDetails);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                SecurityContextHolder.clearContext();
-            }
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } else {
+            SecurityContextHolder.clearContext();
+        }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
-
 
 
 }

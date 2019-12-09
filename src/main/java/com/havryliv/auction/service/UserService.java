@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
     AuthorisationDTO login(String username, String password);
 

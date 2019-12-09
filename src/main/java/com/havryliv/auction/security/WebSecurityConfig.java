@@ -1,7 +1,6 @@
 package com.havryliv.auction.security;
 
 import com.havryliv.auction.configuration.CustomAuthenticationEntryPoint;
-import com.havryliv.auction.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,13 +20,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtTokenProvider jwtTokenProvider;
 
-    private UserService userService;
-
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider, UserService userService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
@@ -41,12 +37,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()//
-                .antMatchers("/users/login").permitAll()//
+                .antMatchers("/users/login", "/actuator/**").permitAll()//
                 .antMatchers("/users/register").permitAll()//
                 .antMatchers("/h2-console/**/**").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedPage("/login").and()
-                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider, userService));
+                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
     }
 
 
