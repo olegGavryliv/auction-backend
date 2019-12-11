@@ -1,6 +1,9 @@
 package com.havryliv.auction.entity;
 
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,14 +17,15 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id", "name"}, callSuper = false)
 @Builder
 @Entity
+@Document(indexName = "products", type = "product")
 public class Product extends BaseEntityAudit {
 
     @Id
-    @GeneratedValue(generator = "product_generator",  strategy = GenerationType.AUTO )
+    @GeneratedValue(generator = "product_generator", strategy = GenerationType.AUTO)
     @SequenceGenerator(
             name = "product_generator",
             sequenceName = "product_sequence",
-            allocationSize=1
+            allocationSize = 1
     )
     @Column(nullable = false)
     protected Long id;
@@ -36,6 +40,7 @@ public class Product extends BaseEntityAudit {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
+    @Field(type = FieldType.Nested, includeInParent = true)
     private User user;
 
     private LocalDate expireTime;
@@ -49,4 +54,5 @@ public class Product extends BaseEntityAudit {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
+
 }

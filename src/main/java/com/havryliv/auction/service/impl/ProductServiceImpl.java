@@ -11,9 +11,10 @@ import com.havryliv.auction.entity.Product;
 import com.havryliv.auction.entity.User;
 import com.havryliv.auction.exception.BusinessException;
 import com.havryliv.auction.exception.UserNotFoundException;
-import com.havryliv.auction.repository.BidRepository;
-import com.havryliv.auction.repository.ProductRepository;
-import com.havryliv.auction.repository.UserRepository;
+import com.havryliv.auction.repository.elastic.ProductElasticRepository;
+import com.havryliv.auction.repository.jpa.BidRepository;
+import com.havryliv.auction.repository.jpa.ProductRepository;
+import com.havryliv.auction.repository.jpa.UserRepository;
 import com.havryliv.auction.service.ProductService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,12 +38,14 @@ public class ProductServiceImpl implements ProductService {
 
     private BidRepository bidRepository;
 
+    private ProductElasticRepository productElasticRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository,
-                              BidRepository bidRepository) {
+
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository, BidRepository bidRepository, ProductElasticRepository productElasticRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.bidRepository = bidRepository;
+        this.productElasticRepository = productElasticRepository;
     }
 
     @Caching(evict = {@CacheEvict(value = "AllProducts", allEntries = true)})// clear cache when add new product in DB
@@ -79,8 +82,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Cacheable(value = "AllProducts", key = "#p0")
     @Override
-    public PageableProductDTO getAll(int currentPage, int itemPerPage) {
-        Page<Product> allProducts = productRepository.findAll(PageRequest.of(currentPage, itemPerPage));
+    public PageableProductDTO getAllElasticSearch(int currentPage, int itemPerPage) {
+        Page<Product> allProducts = productElasticRepository.findAll(PageRequest.of(currentPage, itemPerPage));
         return PageableProductDTO.builder()
                 .products(allProducts.stream()
                         .map(ProductConverter::fromEntityToDTO)
@@ -88,6 +91,16 @@ public class ProductServiceImpl implements ProductService {
                 .allElementsAmount(allProducts.getTotalElements())
                 .allPagesAmount(allProducts.getTotalPages())
                 .build();
+
+        //from db
+      /*  Page<Product> allProducts = productRepository.findAll(PageRequest.of(currentPage, itemPerPage));
+        return PageableProductDTO.builder()
+                .products(allProducts.stream()
+                        .map(ProductConverter::fromEntityToDTO)
+                        .collect(Collectors.toList()))
+                .allElementsAmount(allProducts.getTotalElements())
+                .allPagesAmount(allProducts.getTotalPages())
+                .build();*/
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.havryliv.auction.repository;
+package com.havryliv.auction.repository.jpa;
 
 import com.havryliv.auction.entity.Product;
 import org.springframework.data.domain.Page;

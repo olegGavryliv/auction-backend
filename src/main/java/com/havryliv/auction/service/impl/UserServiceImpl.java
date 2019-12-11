@@ -8,7 +8,7 @@ import com.havryliv.auction.entity.User;
 import com.havryliv.auction.entity.UserRole;
 import com.havryliv.auction.exception.BusinessException;
 import com.havryliv.auction.exception.UserNotFoundException;
-import com.havryliv.auction.repository.UserRepository;
+import com.havryliv.auction.repository.jpa.UserRepository;
 import com.havryliv.auction.security.JwtTokenProvider;
 import com.havryliv.auction.service.MailService;
 import com.havryliv.auction.service.UserService;

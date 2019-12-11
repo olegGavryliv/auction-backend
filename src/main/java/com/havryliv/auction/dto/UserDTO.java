@@ -3,8 +3,10 @@ package com.havryliv.auction.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.havryliv.auction.entity.UserRole;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -14,6 +16,8 @@ import java.io.Serializable;
 import java.util.List;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {

@@ -12,7 +12,7 @@ public interface ProductService {
 
     BidDTO bidProduct(BidDTO bidDTO, String buyerName);
 
-    PageableProductDTO getAll(int currentPage, int itemPerPage);
+    PageableProductDTO getAllElasticSearch(int currentPage, int itemPerPage);
 
     ProductDTO getById(Long id);
 

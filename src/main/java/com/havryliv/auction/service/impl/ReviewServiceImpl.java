@@ -7,14 +7,13 @@ import com.havryliv.auction.entity.Product;
 import com.havryliv.auction.entity.Review;
 import com.havryliv.auction.entity.User;
 import com.havryliv.auction.exception.BusinessException;
-import com.havryliv.auction.repository.ProductRepository;
-import com.havryliv.auction.repository.ReviewRepository;
-import com.havryliv.auction.repository.UserRepository;
+import com.havryliv.auction.repository.jpa.ProductRepository;
+import com.havryliv.auction.repository.jpa.ReviewRepository;
+import com.havryliv.auction.repository.jpa.UserRepository;
 import com.havryliv.auction.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 

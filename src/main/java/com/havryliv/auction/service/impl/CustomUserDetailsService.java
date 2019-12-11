@@ -1,7 +1,7 @@
 package com.havryliv.auction.service.impl;
 
 import com.havryliv.auction.exception.UserNotFoundException;
-import com.havryliv.auction.repository.UserRepository;
+import com.havryliv.auction.repository.jpa.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;

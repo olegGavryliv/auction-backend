@@ -56,7 +56,7 @@ public class ProductController {
             @ApiResponse(code = 422, message = "Username is already in use"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public ResponseEntity<PageableProductDTO> getAllProducts(@RequestParam(name = "page") int currentPage,  @RequestParam(name = "itemsPerPageCount") int itemPerPage){
-        return ResponseEntity.ok().body(productService.getAll(currentPage , itemPerPage));
+        return ResponseEntity.ok().body(productService.getAllElasticSearch(currentPage , itemPerPage));
     }
 
     @GetMapping("/{id}")
