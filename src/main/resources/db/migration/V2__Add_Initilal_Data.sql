@@ -11,13 +11,13 @@ insert into role (user_id, user_roles)
  values   (currval('users_sequence'), 'ROLE_CLIENT');
 
 
-insert into product (id, name, description, user_id, image )
- values (nextval('product_sequence'), 'Box1', 'My Box1', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=23423423' ),
-       (nextval('product_sequence'), 'Box2', 'My Box2', currval('users_sequence'), 'https://picsum.photos/900/500?random&amp;t=234223' ),
-       (nextval('product_sequence'), 'Box3', 'My Box3', currval('users_sequence'),  'https://picsum.photos/900/500?random&amp;t=234223' ),
-       (nextval('product_sequence'), 'Box4', 'My Box4', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=33242' ),
-       (nextval('product_sequence'), 'Box5', 'My Box5', currval('users_sequence'),  'https://picsum.photos/900/500?random&amp;t=423414' ),
-       (nextval('product_sequence'), 'Box6', 'My Box6', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=21414124' );
+insert into product (id, name, description, user_id, image, updatedAt )
+ values (nextval('product_sequence'), 'Box1', 'My Box1', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=23423423', now() ),
+       (nextval('product_sequence'), 'Box2', 'My Box2', currval('users_sequence'), 'https://picsum.photos/900/500?random&amp;t=234223',now() ),
+       (nextval('product_sequence'), 'Box3', 'My Box3', currval('users_sequence'),  'https://picsum.photos/900/500?random&amp;t=234223',now() ),
+       (nextval('product_sequence'), 'Box4', 'My Box4', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=33242',now() ),
+       (nextval('product_sequence'), 'Box5', 'My Box5', currval('users_sequence'),  'https://picsum.photos/900/500?random&amp;t=423414', now() ),
+       (nextval('product_sequence'), 'Box6', 'My Box6', currval('users_sequence')-1, 'https://picsum.photos/900/500?random&amp;t=21414124', now() );
 
 insert into bid (id, price, time , bidder_id, product_id)
  values (nextval('bid_sequence'), 4000, now(), currval('users_sequence'), currval('product_sequence')-2 ),
