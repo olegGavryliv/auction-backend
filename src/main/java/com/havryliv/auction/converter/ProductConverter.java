@@ -1,6 +1,7 @@
 package com.havryliv.auction.converter;
 
 import com.havryliv.auction.dto.ProductDTO;
+import com.havryliv.auction.dto.UserDTO;
 import com.havryliv.auction.entity.Product;
 import com.havryliv.auction.entity.Review;
 import lombok.experimental.UtilityClass;
@@ -27,17 +28,15 @@ public class ProductConverter {
 
     public ProductDTO fromEntityToDTO(Product product) {
 
-        List<Review> reviews = product.getReviews();
-
         return ProductDTO.builder()
                 .id(product.getId())
-                .owner(UserConverter.fromEntityToDTO(product.getUser()))
+                .owner(product.getUser()!= null ? UserConverter.fromEntityToDTO(product.getUser()) : new UserDTO())
                 .image(product.getImage())
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .expireTime(product.getExpireTime())
                 .name(product.getName())
-                .rating(reviews != null ? reviews.stream().mapToDouble(Review::getRating).average().orElse(0) : 0)
+                .rating(product.getRating() != null ? product.getRating() : 0)
                 .reviews(product.getReviews() != null ? product.getReviews()
                         .stream()
                         .map(ReviewConverter::fromEntityToDTO)

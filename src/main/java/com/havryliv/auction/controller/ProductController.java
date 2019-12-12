@@ -37,7 +37,6 @@ public class ProductController {
        return ResponseEntity.ok().body(productService.addProduct(productDTO, principal.getName()));
     }
 
-
     @PostMapping("/bid")
     @ApiOperation(value = "${PostController.bid}")
     @ApiResponses(value = {
@@ -49,7 +48,6 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.bidProduct(bidDTO, principal.getName()));
     }
 
-
     @GetMapping("")
     @ApiOperation(value = "${PostController.getAllProducts}")
     @ApiResponses(value = {
@@ -57,8 +55,8 @@ public class ProductController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 422, message = "Username is already in use"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public ResponseEntity<PageableProductDTO> getAllProducts(){
-        return ResponseEntity.ok().body(productService.getAll());
+    public ResponseEntity<PageableProductDTO> getAllProducts(@RequestParam(name = "page") int currentPage,  @RequestParam(name = "itemsPerPageCount") int itemPerPage){
+        return ResponseEntity.ok().body(productService.getAllElasticSearch(currentPage , itemPerPage));
     }
 
     @GetMapping("/{id}")
@@ -72,7 +70,6 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getById(id));
     }
 
-
     @GetMapping("/random/images")
     @ApiOperation(value = "${PostController.getById}")
     @ApiResponses(value = {
@@ -83,6 +80,5 @@ public class ProductController {
     public ResponseEntity<List<String>> getRandom3Images(){
         return ResponseEntity.ok().body(productService.get3RandomImages());
     }
-
 
 }

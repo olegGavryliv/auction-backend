@@ -3,7 +3,6 @@ package com.havryliv.auction.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 import java.io.Serializable;
 import java.util.List;

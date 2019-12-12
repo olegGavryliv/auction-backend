@@ -1,4 +1,4 @@
-package com.havryliv.auction.repository;
+package com.havryliv.auction.repository.jpa;
 
 import com.havryliv.auction.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

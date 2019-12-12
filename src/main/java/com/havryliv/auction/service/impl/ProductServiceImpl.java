@@ -11,12 +11,12 @@ import com.havryliv.auction.entity.Product;
 import com.havryliv.auction.entity.User;
 import com.havryliv.auction.exception.BusinessException;
 import com.havryliv.auction.exception.UserNotFoundException;
-import com.havryliv.auction.repository.BidRepository;
-import com.havryliv.auction.repository.ProductRepository;
-import com.havryliv.auction.repository.UserRepository;
+import com.havryliv.auction.repository.elastic.ProductElasticRepository;
+import com.havryliv.auction.repository.jpa.BidRepository;
+import com.havryliv.auction.repository.jpa.ProductRepository;
+import com.havryliv.auction.repository.jpa.UserRepository;
 import com.havryliv.auction.service.ProductService;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
@@ -38,15 +38,17 @@ public class ProductServiceImpl implements ProductService {
 
     private BidRepository bidRepository;
 
+    private ProductElasticRepository productElasticRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository,
-                              BidRepository bidRepository) {
+
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository, BidRepository bidRepository, ProductElasticRepository productElasticRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.bidRepository = bidRepository;
+        this.productElasticRepository = productElasticRepository;
     }
 
-    @Caching(evict = {@CacheEvict(value = "AllProducts", allEntries = true)})
+    @Caching(evict = {@CacheEvict(value = "AllProducts", allEntries = true)})// clear cache when add new product in DB
     @Override
     public ProductDTO addProduct(ProductDTO productDTO, String ownerName) {
         Product product = buildProductForSave(productDTO, ownerName);
@@ -78,10 +80,10 @@ public class ProductServiceImpl implements ProductService {
         return BidConverter.fromEntityToDTO(dbBid);
     }
 
-    @Cacheable(value = "AllProducts")
+    @Cacheable(value = "AllProducts", key = "#p0")
     @Override
-    public PageableProductDTO getAll() {
-        Page<Product> allProducts = productRepository.findAll(PageRequest.of(0, 20));
+    public PageableProductDTO getAllElasticSearch(int currentPage, int itemPerPage) {
+        Page<Product> allProducts = productElasticRepository.findAll(PageRequest.of(currentPage, itemPerPage));
         return PageableProductDTO.builder()
                 .products(allProducts.stream()
                         .map(ProductConverter::fromEntityToDTO)
@@ -89,22 +91,32 @@ public class ProductServiceImpl implements ProductService {
                 .allElementsAmount(allProducts.getTotalElements())
                 .allPagesAmount(allProducts.getTotalPages())
                 .build();
+
+        //from db
+      /*  Page<Product> allProducts = productRepository.findAll(PageRequest.of(currentPage, itemPerPage));
+        return PageableProductDTO.builder()
+                .products(allProducts.stream()
+                        .map(ProductConverter::fromEntityToDTO)
+                        .collect(Collectors.toList()))
+                .allElementsAmount(allProducts.getTotalElements())
+                .allPagesAmount(allProducts.getTotalPages())
+                .build();*/
     }
 
     @Override
     public ProductDTO getById(Long id) {
-       Product dbProduct = productRepository.findByIdCustom(id)
+        Product dbProduct = productRepository.findByIdCustom(id)
                 .orElseThrow(() -> new BusinessException(ExceptionMessages.NOT_FOUND, new String[]{"product id :" + id},
-                HttpStatus.NOT_FOUND));
-       return ProductConverter.fromEntityToDTO(dbProduct);
+                        HttpStatus.NOT_FOUND));
+        return ProductConverter.fromEntityToDTO(dbProduct);
     }
 
     @Cacheable(value = "Top3Products")
     @Override
     public List<String> get3RandomImages() {
-       return productRepository.findTop3ByRatingGreaterThanOrderByRatingAsc(2.0).stream()
-               .map(Product::getImage)
-               .collect(Collectors.toList());
+        return productRepository.findTop3ByRatingGreaterThanOrderByRatingAsc(2.0).stream()
+                .map(Product::getImage)
+                .collect(Collectors.toList());
     }
 
     private Product buildProductForSave(ProductDTO productDTO, String ownerName) {

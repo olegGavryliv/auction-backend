@@ -1,6 +1,5 @@
 package com.havryliv.auction.security;
 
-import com.havryliv.auction.service.UserService;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -10,16 +9,14 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
 
     private JwtTokenProvider jwtTokenProvider;
 
-    private UserService userService;
 
-    public JwtTokenFilterConfigurer(JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public JwtTokenFilterConfigurer(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
     }
 
     @Override
     public void configure(HttpSecurity http) {
-        JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenProvider, userService);
+        JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenProvider);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
