@@ -23,7 +23,7 @@
         <commons-lang3.version>3.9</commons-lang3.version>
         <postgresql.version>42.2.8</postgresql.version>
         <java-jwt.version>3.8.3</java-jwt.version>
-        <jackson-databind.version>2.10.0</jackson-databind.version>
+        <jackson-databind.version>2.12.7.1</jackson-databind.version>
         <jjwt.version>0.9.0</jjwt.version>
         <flyway-core.version>6.1.0</flyway-core.version>
         <lombok.version>1.18.10</lombok.version>
